@@ -90,6 +90,16 @@ Requirements:
 - Do not add Docker, deployment configuration, authentication, or unrelated features.
 - Do not commit `node_modules`, local `.env` files, build output, or secrets.
 
+## Local MongoDB and Starter Data
+
+1. Install and run MongoDB Community Server locally. Follow the operating-system-specific instructions in `README.md`.
+2. Use your own local assessment database; trainers do not share a database.
+3. Configure the backend connection in `server/.env` with `MONGODB_URI`, using `server/.env.example` and `README.md` as references.
+4. From the repository root, run `npm run seed` before starting the application.
+5. The fictional seed records are starter data, not an assessed task. Use them to test searching, filtering, editing, and pagination.
+6. Trainers do not need MongoDB accounts and must not share database credentials.
+7. Database contents are not collected or separately evaluated. Marks are based on the submitted implementation and its behavior.
+
 ## Submission Instructions
 
 1. Create and work on your assigned branch, using the naming convention provided by the assessor (for example, `submission/trainer-01`).

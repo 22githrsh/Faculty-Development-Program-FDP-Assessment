@@ -4,6 +4,17 @@ import mongoose from 'mongoose'
 import Student from '../src/models/Student.js'
 import { buildStudentQuery } from '../src/utils/studentQuery.js'
 import { getStudentWriteError } from '../src/utils/studentErrors.js'
+import { assessmentStudents } from '../src/data/assessmentStudents.js'
+
+test('assessment seed records are unique and valid for the Student schema', async () => {
+  const normalizedEmails = assessmentStudents.map(({ email }) => email.trim().toLowerCase())
+  assert.equal(assessmentStudents.length, 25)
+  assert.equal(new Set(normalizedEmails).size, assessmentStudents.length)
+
+  for (const record of assessmentStudents) {
+    await new Student(record).validate()
+  }
+})
 
 test('student schema requires the core fields and timestamps', async () => {
   const student = new Student({})

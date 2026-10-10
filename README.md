@@ -17,7 +17,7 @@ The assessment uses the following technologies:
 | Frontend tooling | Vite |
 | Backend runtime | Node.js |
 | Backend framework | Express.js |
-| Database | MongoDB Atlas |
+| Database | Local MongoDB Community Server |
 | Database ODM | Mongoose |
 | API communication | REST APIs and JSON |
 | Security middleware | Helmet |
@@ -38,7 +38,8 @@ Before beginning the assessment, ensure that the following tools are installed:
 - npm
 - Git
 - A code editor, preferably Visual Studio Code
-- Access to the designated MongoDB Atlas database
+- MongoDB Community Server running locally
+- `mongosh` (optional, for checking the local database connection)
 
 Verify your installations:
 
@@ -57,7 +58,7 @@ If any required tool is missing, install and configure it before proceeding.
 The repository follows a standard MERN application structure.
 
 ```text
-mern-fdp-assessment/
+Faculty-Development-Program-FDP-Assessment/
 ├── client/
 │   ├── public/
 │   ├── src/
@@ -68,12 +69,16 @@ mern-fdp-assessment/
 │   ├── src/
 │   │   ├── config/
 │   │   │   └── db.js
+│   │   ├── data/
+│   │   │   └── assessmentStudents.js
 │   │   ├── controllers/
 │   │   ├── middleware/
 │   │   ├── models/
 │   │   ├── routes/
 │   │   ├── app.js
 │   │   └── server.js
+│   ├── scripts/
+│   │   └── seedStudents.js
 │   ├── .env.example
 │   └── package.json
 ├── .gitignore
@@ -91,7 +96,7 @@ Clone the official assessment repository to your local machine.
 
 ```bash
 git clone https://github.com/GitMohit123/Faculty-Development-Program-FDP-Assessment.git
-cd mern-fdp-assessment
+cd Faculty-Development-Program-FDP-Assessment
 ```
 Do not create your own replacement repository unless explicitly instructed.
 
@@ -126,10 +131,10 @@ Configure the following variables:
 PORT=5000
 NODE_ENV=development
 CLIENT_URL=http://localhost:5173
-MONGODB_URI=<YOUR_AUTHORIZED_MONGODB_CONNECTION_STRING>
+MONGODB_URI=mongodb://127.0.0.1:27017/mern_fdp_assessment
 ```
 
-Replace the MongoDB placeholder with the connection string authorized for your assessment.
+This URI connects to a local database named `mern_fdp_assessment`. Change the database name after the final slash if you prefer another local assessment database. A standard local MongoDB Community Server installation does not require a username or password unless you explicitly enabled authentication.
 
 ### 6.2 Frontend configuration
 
@@ -146,42 +151,49 @@ VITE_API_BASE_URL=http://localhost:5000/api
 - Never commit `.env`, `.env.local`, database credentials, or access tokens.
 - Never place database credentials or private keys in frontend environment variables.
 - Do not modify the shared `.env.example` files to include real credentials.
-- Do not share your database connection string in Pull Requests, screenshots, or public issues.
-- Use only the database access and credentials authorized by the FDP coordinator.
+- Do not share database connection strings in Pull Requests, screenshots, or public issues.
+- Each trainer uses their own local database; no MongoDB account or shared credential is required.
 
-If database access has not been provided, contact the coordinator before attempting database-dependent tasks.
+## 7. Install and Start Local MongoDB
 
----
+Each trainer uses their own local MongoDB database. No Atlas account, central database, MongoDB user, or shared database credential is required. Use the official Community Server installation guide for your operating system:
 
-## 7. MongoDB Atlas Connection
+- macOS: [Install MongoDB Community on macOS](https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-os-x/). With Homebrew, install with `brew tap mongodb/brew && brew install mongodb-community@8.0`, then start with `brew services start mongodb-community@8.0`.
+- Windows: [Install MongoDB Community on Windows](https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-windows/). If installed as a Windows service, use elevated PowerShell and run `Start-Service MongoDB`, or use `net start MongoDB` in an elevated Command Prompt.
+- Ubuntu/Linux: [Install MongoDB Community on Ubuntu](https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-ubuntu/). On systemd-based Ubuntu installations, run `sudo systemctl start mongod` and check it with `sudo systemctl status mongod`.
 
-The assessment uses MongoDB Atlas for cloud-hosted database connectivity.
+Installation and service names can vary by MongoDB release and platform; follow the linked official guide for your installed version. If `mongosh` is installed, verify a running local server with:
 
-Before starting database-dependent functionality:
+```bash
+mongosh "mongodb://127.0.0.1:27017" --eval 'db.adminCommand({ ping: 1 })'
+```
 
-1. Confirm that your MongoDB Atlas access has been configured.
-2. Verify that the database user has the required permissions.
-3. Ensure your current network or IP address is allowed by the authorized network-access configuration.
-4. Confirm that your `MONGODB_URI` is valid.
-5. Start the backend and check the terminal for a successful database connection message.
-
-Do not use personal production databases or unapproved database credentials for this assessment.
-
-Use only the designated assessment database or the isolated database assigned to you.
-
-Do not delete collections, alter shared records, or change database configuration outside the scope of the assessment.
+The response should include `ok: 1`.
 
 ---
 
-## 8. Start the Application
+## 8. Configure, Seed, and Start the Application
 
-Once dependencies and environment variables are configured, start the frontend and backend from the repository root:
+Run these steps from the repository root:
+
+1. Install dependencies as shown in Section 5.
+2. Create the private backend environment file from the checked-in example. On macOS/Linux run `cp server/.env.example server/.env`; in PowerShell run `Copy-Item server/.env.example server/.env`.
+3. Confirm `server/.env` uses the local `MONGODB_URI` from Section 6. Keep local environment files uncommitted.
+4. Start MongoDB Community Server using the instructions for your operating system in Section 7.
+5. Seed the local database with fictional starter data:
+
+  ```bash
+  npm run seed
+  ```
+
+  The script inserts 25 fictional students using the existing Mongoose model. It can be run repeatedly: existing normalized email addresses are skipped, and existing records are never updated or deleted. Seed data supports testing search, filters, editing, and pagination; seeding is setup support, not an assessed task.
+6. Start the frontend and backend together:
 
 ```bash
 npm run dev
 ```
 
-The application should run at the following addresses:
+The application should run at the following addresses. Select **API data** in the interface to load seeded MongoDB records; **Sample preview** is a separate set of fixtures.
 
 | Service | URL |
 |---|---|
@@ -208,7 +220,20 @@ The initial health endpoint should return HTTP `200` and a JSON response similar
 }
 ```
 
-This endpoint confirms that the API is responding. Check the backend logs separately to confirm the MongoDB connection.
+This endpoint confirms that the API is responding. Check backend logs for `MongoDB connected successfully`. To verify the seed records are available through the API, run:
+
+```bash
+curl -i http://localhost:5000/api/students
+```
+
+### Troubleshooting
+
+- MongoDB service is not running: start it with the OS-specific service command in Section 7, then retry the connection check.
+- The backend reports a missing or failed `MONGODB_URI`: confirm `server/.env` exists, the variable name is exactly `MONGODB_URI`, the URI points to `127.0.0.1:27017`, and MongoDB is running.
+- The seed command cannot find its script, Student model, or database configuration: run `npm run seed` from the repository root, confirm backend dependencies were installed with `npm install --prefix server`, and check that the existing `server/src/models/Student.js` and `server/src/config/db.js` files are present. From the backend directory, the equivalent command is also `npm run seed`.
+- The seed command fails during validation or index creation: inspect the backend error output and resolve conflicting duplicate email values. Do not drop the database to retry.
+- The frontend does not load API data: confirm the backend uses port 5000, `client/.env.local` contains `VITE_API_BASE_URL=http://localhost:5000/api`, `CLIENT_URL` matches the frontend origin (`http://localhost:5173`), and **API data** mode is selected. Restart Vite after changing its environment file.
+- A command is run from the wrong directory: run root-level commands such as `npm run seed` and `npm run dev` from the repository root, or use the backend package commands from `server/`.
 
 ---
 
@@ -291,15 +316,17 @@ Check that:
 - No unnecessary generated files or dependencies have been added.
 - Your changes satisfy the task requirements.
 
-### Step 5: Run the build
+### Step 5: Run tests, lint, and build
 
-From the repository root:
+From the repository root, run the available checks:
 
 ```bash
+npm test
+npm run lint --prefix client
 npm run build
 ```
 
-The frontend production build should complete successfully.
+The automated tests should pass, and the frontend production build should complete successfully.
 
 Also verify the backend, database operations, API responses, validation, and error scenarios required by `task.md`.
 
