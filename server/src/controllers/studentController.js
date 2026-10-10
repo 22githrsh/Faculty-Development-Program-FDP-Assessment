@@ -1,0 +1,49 @@
+import mongoose from "mongoose";
+import Student from "../models/Student.js";
+import { buildStudentQuery } from "../utils/studentQuery.js";
+import { getStudentWriteError } from "../utils/studentErrors.js";
+
+function sendWriteError(error, res) {
+  const result = getStudentWriteError(error, mongoose);
+  return res.status(result.status).json({ success: false, message: result.message });
+}
+
+export async function listStudents(req, res) {
+  try {
+    const { filter, page, pageSize } = buildStudentQuery(req.query);
+    const [students, total] = await Promise.all([
+      Student.find(filter).sort({ createdAt: -1 }).skip((page - 1) * pageSize).limit(pageSize),
+      Student.countDocuments(filter),
+    ]);
+    return res.status(200).json({
+      success: true,
+      data: students,
+      pagination: { page, pageSize, total, pages: Math.ceil(total / pageSize) },
+    });
+  } catch {
+    return res.status(500).json({ success: false, message: "Unable to load students" });
+  }
+}
+
+export async function createStudent(req, res) {
+  try {
+    const student = await Student.create(req.body);
+    return res.status(201).json({ success: true, data: student });
+  } catch (error) {
+    return sendWriteError(error, res);
+  }
+}
+
+export async function updateStudent(req, res) {
+  try {
+    // Challenge 4: validate the ObjectId and enable update validators before saving.
+    const student = await Student.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!student) {
+      return res.status(404).json({ success: false, message: "Student not found" });
+    }
+
+    return res.status(200).json({ success: true, data: student });
+  } catch (error) {
+    return sendWriteError(error, res);
+  }
+}

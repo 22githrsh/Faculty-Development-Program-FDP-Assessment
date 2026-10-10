@@ -1,0 +1,26 @@
+const apiBaseUrl = import.meta.env?.VITE_API_BASE_URL || 'http://localhost:5000/api'
+
+async function request(path, options) {
+  const response = await fetch(`${apiBaseUrl}${path}`, {
+    headers: { 'Content-Type': 'application/json' },
+    ...options,
+  })
+  const payload = await response.json().catch(() => ({}))
+
+  if (!response.ok || payload.success === false) {
+    throw new Error(payload.message || `Request failed with status ${response.status}`)
+  }
+
+  return payload.data
+}
+
+export async function fetchStudents() {
+  return request('/students')
+}
+
+export async function createStudent(student) {
+  return request('/students', {
+    method: 'POST',
+    body: JSON.stringify(student),
+  })
+}
