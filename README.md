@@ -52,7 +52,7 @@ If any required tool is missing, install and configure it before proceeding.
 
 ---
 
-## 4. Repository Structure
+## 3. Repository Structure
 
 The repository follows a standard MERN application structure.
 
@@ -85,7 +85,7 @@ mern-fdp-assessment/
 
 ---
 
-## 5. Clone the Repository
+## 4. Clone the Repository
 
 Clone the official assessment repository to your local machine.
 
@@ -97,7 +97,7 @@ Do not create your own replacement repository unless explicitly instructed.
 
 ---
 
-## 6. Install Dependencies
+## 5. Install Dependencies
 
 From the repository root, run:
 
@@ -112,11 +112,11 @@ Do not delete or replace dependency lockfiles unnecessarily.
 
 ---
 
-## 7. Configure Environment Variables
+## 6. Configure Environment Variables
 
 The application uses environment variables to configure the frontend and backend.
 
-### 7.1 Backend configuration
+### 6.1 Backend configuration
 
 Create a file named `server/.env` using `server/.env.example` as the template.
 
@@ -131,7 +131,7 @@ MONGODB_URI=<YOUR_AUTHORIZED_MONGODB_CONNECTION_STRING>
 
 Replace the MongoDB placeholder with the connection string authorized for your assessment.
 
-### 7.2 Frontend configuration
+### 6.2 Frontend configuration
 
 Create `client/.env.local` using `client/.env.example` as the template.
 
@@ -141,7 +141,7 @@ Configure:
 VITE_API_BASE_URL=http://localhost:5000/api
 ```
 
-### 7.3 Environment variable rules
+### 6.3 Environment variable rules
 
 - Never commit `.env`, `.env.local`, database credentials, or access tokens.
 - Never place database credentials or private keys in frontend environment variables.
@@ -153,7 +153,7 @@ If database access has not been provided, contact the coordinator before attempt
 
 ---
 
-## 8. MongoDB Atlas Connection
+## 7. MongoDB Atlas Connection
 
 The assessment uses MongoDB Atlas for cloud-hosted database connectivity.
 
@@ -173,7 +173,7 @@ Do not delete collections, alter shared records, or change database configuratio
 
 ---
 
-## 9. Start the Application
+## 8. Start the Application
 
 Once dependencies and environment variables are configured, start the frontend and backend from the repository root:
 
@@ -210,37 +210,9 @@ The initial health endpoint should return HTTP `200` and a JSON response similar
 
 This endpoint confirms that the API is responding. Check the backend logs separately to confirm the MongoDB connection.
 
-### Common setup issues
-
-**Frontend does not start**
-
-- Confirm that frontend dependencies are installed.
-- Check whether port `5173` is already in use.
-- Review the terminal output for errors.
-
-**Backend does not start**
-
-- Confirm that backend dependencies are installed.
-- Check whether port `5000` is already in use.
-- Verify the environment variables and terminal output.
-
-**MongoDB connection fails**
-
-- Check the MongoDB connection string.
-- Verify the database username and password.
-- Check Atlas network-access configuration.
-- Confirm that the database user has the required permissions.
-
-**Frontend cannot communicate with the backend**
-
-- Verify that both applications are running.
-- Check `VITE_API_BASE_URL`.
-- Check the backend's `CLIENT_URL` and CORS configuration.
-- Inspect the browser console and network requests.
-
 ---
 
-## 10. Understand the Assessment Tasks
+## 9. Understand the Assessment Tasks
 
 Before implementation, read [`task.md`](./task.md) completely.
 
@@ -262,7 +234,7 @@ Each task will be evaluated against its published requirements and acceptance cr
 
 ---
 
-## 11. Git and GitHub Workflow
+## 10. Git and GitHub Workflow
 
 Every participant must submit an individual Pull Request.
 
@@ -376,51 +348,11 @@ Verify that the PR contains only your intended changes before submitting it.
 
 ---
 
-## 12. Pull Request Description Template
-
-Use the following template when opening your Pull Request.
-
-### Participant Details
-
-- **Full Name:**
-- **GitHub Username:**
-- **Submission Branch:**
-
-### Task Completion
-
-- **Task 1:** Completed / Not completed
-- **Task 2:** Completed / Not completed
-- **Task 3:** Completed / Not completed
-- **Task 4:** Completed / Not completed
-- **Task 5:** Completed / Not completed
-
-### Implementation Summary
-
-Briefly explain the features implemented and the important technical decisions made.
-
-### Testing Performed
-
-List the tests you ran, including relevant API tests, frontend tests, database checks, and edge cases.
-
-### Known Limitations
-
-Mention any incomplete requirements, known bugs, assumptions, or limitations.
-
-### Evidence
-
-Attach screenshots or other evidence if explicitly requested by the FDP coordinator.
-
-### Declaration
-
-I confirm that the submitted work is my own and that I have followed the assessment instructions and submission requirements.
-
----
-
-## 13. Final Submission Conditions
+## 12. Final Submission Conditions
 
 All participants must follow these conditions.
 
-### 13.1 Submission method
+### 12.1 Submission method
 
 - Submit your work through a GitHub Pull Request.
 - Use your assigned submission branch.
@@ -428,7 +360,7 @@ All participants must follow these conditions.
 - Submit before the deadline announced by the FDP coordinator.
 - Do not merge your own Pull Request.
 
-### 13.2 Code quality
+### 12.2 Code quality
 
 - Write readable, maintainable code.
 - Follow the existing project structure and coding conventions.
@@ -437,7 +369,7 @@ All participants must follow these conditions.
 - Avoid unnecessary dependencies and unrelated code changes.
 - Remove debugging statements that are not needed in the final submission.
 
-### 13.3 Functionality and testing
+### 12.3 Functionality and testing
 
 - Ensure the application starts using the documented commands.
 - Ensure the frontend production build succeeds.
@@ -446,14 +378,14 @@ All participants must follow these conditions.
 - Ensure frontend and backend integration works correctly.
 - Verify database operations against the authorized assessment database.
 
-### 13.4 Security
+### 12.4 Security
 
 - Never commit database credentials, `.env` files, private keys, or access tokens.
 - Do not expose secrets through frontend code or logs.
 - Do not bypass validation, CORS requirements, or other security checks specified by the assessment.
 - Do not use unauthorized databases or access another participant's data.
 
-### 13.5 Originality and integrity
+### 12.5 Originality and integrity
 
 - Submit your own implementation.
 - Do not copy another participant's work.
@@ -461,7 +393,7 @@ All participants must follow these conditions.
 - Do not modify assessment criteria, remove evaluation checks, or bypass the intended requirements.
 - Clearly acknowledge any permitted external code or assistance when required by the FDP coordinator.
 
-### 13.6 Pull Request requirements
+### 12.6 Pull Request requirements
 
 - Use the prescribed Pull Request title.
 - Include your participant details.
@@ -470,76 +402,3 @@ All participants must follow these conditions.
 - Respond to evaluator questions or requested changes within the announced evaluation window.
 
 Failure to follow the submission rules may affect the evaluation, regardless of whether the application appears functional.
-
----
-
-## 14. Evaluation Process
-
-The evaluator will assess submissions against the official rubric published in `task.md`.
-
-Evaluation may include:
-
-- Functional verification.
-- Frontend implementation and React fundamentals.
-- Backend routes, controllers, middleware, and API design.
-- MongoDB connectivity, schema design, and database operations.
-- CORS configuration and application security.
-- Input validation and error handling.
-- Code organization and maintainability.
-- Testing quality and edge-case handling.
-- Compliance with GitHub and submission requirements.
-- A follow-up technical discussion or demonstration, if required.
-
-A successful build alone does not guarantee full marks.
-
-Each task must meet its published acceptance criteria. The final score will be based on the official marks distribution and evaluation rubric.
-
----
-
-## 15. Troubleshooting and Support
-
-If you encounter an issue:
-
-1. Read the terminal error message carefully.
-2. Check the relevant environment variables.
-3. Verify that the frontend and backend are running.
-4. Check the browser console and network requests.
-5. Review the backend logs.
-6. Confirm your database connectivity and permissions.
-7. Consult the relevant task requirements.
-8. Contact the FDP coordinator through the designated communication channel if the issue remains unresolved.
-
-Do not publish credentials, access tokens, or confidential information when asking for help.
-
----
-
-## 16. Final Checklist
-
-Before submitting your Pull Request, confirm that:
-
-- [ ] All five assessment tasks have been reviewed.
-- [ ] The required functionality has been implemented to the extent claimed.
-- [ ] The frontend builds successfully.
-- [ ] The backend starts successfully.
-- [ ] MongoDB connectivity has been verified.
-- [ ] Relevant API and integration scenarios have been tested.
-- [ ] No secrets or environment files are committed.
-- [ ] Changes are pushed to your individual submission branch.
-- [ ] The Pull Request targets the correct base branch.
-- [ ] The PR title and description follow the instructions.
-- [ ] Known limitations are disclosed.
-- [ ] The submission is complete before the deadline.
-
----
-
-## 17. Final Instructions
-
-The official assessment task specifications and marking criteria are maintained in [`task.md`](./task.md).
-
-Read both `README.md` and `task.md` before starting the implementation.
-
-Follow the prescribed workflow, submit your own work, and ensure that your Pull Request is ready for technical review.
-
-**Good luck with your MERN Stack assessment!**
-
-**TrainX Faculty Development Program**
